@@ -60,6 +60,7 @@ public class Shape
                 lines.lineTo(rect.left + rect.right/2, rect.top + rect.bottom/2);
                 lines.lineTo(rect.left, rect.top - rect.bottom/2);
                 lines.lineTo(rect.left - rect.right/2, rect.top + rect.bottom/2);
+                lines.close();
                 c.drawPath(lines, paint);
                 break;
         }
