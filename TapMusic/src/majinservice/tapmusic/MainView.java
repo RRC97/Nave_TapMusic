@@ -32,6 +32,7 @@ public class MainView extends View implements Runnable
     float volume;
     float width, height;
     MediaPlayer mediaPlayer;
+    private boolean running;
     public MainView(Context c)
     {
     	
@@ -41,6 +42,8 @@ public class MainView extends View implements Runnable
         width = getResources().getDisplayMetrics().widthPixels;
         volume = 1;
         setKeepScreenOn(true);
+        
+        running = true;
             
         touch = new InputTouch(height);
         
@@ -78,11 +81,35 @@ public class MainView extends View implements Runnable
         {
             list.get(i).Draw(c);
         }
-        
-        invalidate();
     }
     
+    public void play()
+    {
+    	running = true;
+    }
+    public void pause()
+    {
+    	running = false;
+    }
+    
+    @Override
     public void run()
+    {
+    	if(running)
+    	{
+    		mediaPlayer.start();
+    		onUpdate();
+            invalidate();
+    	}
+    	else
+    	{ 
+        	mediaPlayer.pause();
+    	}
+    	
+		handler.postDelayed(this, 1);
+    }
+    
+    private void onUpdate()
     {
         touch.update();
         
@@ -145,8 +172,6 @@ public class MainView extends View implements Runnable
         
         if(volume <= 0)volume = 0;
         if(volume >= 1)volume = 1;
-        
-        handler.postDelayed(this, 1);
     }
     
     @Override
