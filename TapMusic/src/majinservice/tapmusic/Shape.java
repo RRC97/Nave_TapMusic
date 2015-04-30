@@ -88,6 +88,17 @@ public class Shape
         rect.top = y;
     }
     
+    public float getDefaultSize()
+    {
+        return defaultRect.right;
+    }
+    
+    public void setSize(float s)
+    {
+        rect.right = s;
+        rect.bottom = s;
+    }
+    
     public void setPorcent(int p)
     {
         porcent = p;

@@ -97,16 +97,19 @@ public class MainView extends View implements Runnable
     {
     	if(running)
     	{
-    		mediaPlayer.start();
-    		onUpdate();
+            if(!mediaPlayer.isPlaying())
+                mediaPlayer.start();
+            
+            onUpdate();
             invalidate();
     	}
     	else
-    	{ 
+    	{
+            if(mediaPlayer.isPlaying())
         	mediaPlayer.pause();
     	}
     	
-		handler.postDelayed(this, 1);
+        handler.postDelayed(this, 1);
     }
     
     private void onUpdate()
@@ -118,7 +121,7 @@ public class MainView extends View implements Runnable
             list.get(i).Update();
         }
         
-        mediaPlayer.setVolume(volume, volume);
+        float lastVolume = volume;
         
         for(int i = 0; i < list.size(); i++)
         {
@@ -129,6 +132,7 @@ public class MainView extends View implements Runnable
                 	if(volume < 1)
                 		volume += 0.1f;
                 	score +=10;
+                        touch.acerted();
                 }
                 else
                 {
@@ -172,6 +176,9 @@ public class MainView extends View implements Runnable
         
         if(volume <= 0)volume = 0;
         if(volume >= 1)volume = 1;
+        
+        if(volume != lastVolume)
+            mediaPlayer.setVolume(volume, volume);
     }
     
     @Override

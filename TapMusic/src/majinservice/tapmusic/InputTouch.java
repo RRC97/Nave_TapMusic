@@ -14,9 +14,9 @@ import android.graphics.Canvas;
 public class InputTouch
 {
     private float x, y, lastX, lastY;
-    private int index;
+    private int index, countAcert, idAcert;
     private float porcent;
-    private boolean active;
+    private boolean active, acert, sideAcert;
     private Shape[] shapes;
     
     public InputTouch(float screenHeight)
@@ -83,6 +83,27 @@ public class InputTouch
             if(modulePorcent < modulePorcent2)
                 index = i;
         }
+        if(acert)
+        {
+            if(!sideAcert)
+                countAcert++;
+            else
+                countAcert--;
+            
+            shapes[idAcert].setSize(shapes[idAcert].getDefaultSize() + countAcert * 4);
+            
+            if(!sideAcert && countAcert >= 5)
+            {
+                sideAcert = true;
+            }
+            else if(countAcert <= 0)
+            {
+                sideAcert = false;
+                acert = false;
+                countAcert = 0;
+                idAcert = 0;
+            }
+        }
     }
     
     public void setActive(boolean a)
@@ -102,6 +123,12 @@ public class InputTouch
     {
         this.x = x;
         this.y = y;
+    }
+    
+    public void acerted()
+    {
+        acert = true;
+        idAcert = index;
     }
     
     public int getIndex()
