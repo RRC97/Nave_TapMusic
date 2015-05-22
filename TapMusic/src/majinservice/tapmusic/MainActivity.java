@@ -15,7 +15,6 @@ public class MainActivity extends Activity
         setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
         view = new MainView(this);
         setContentView(view);
-        //setContentView(R.layout.main);
     }
     
     @Override

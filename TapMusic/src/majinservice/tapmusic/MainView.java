@@ -25,9 +25,9 @@ public class MainView extends View implements Runnable
     InputTouch touch;
     Handler handler;
     List<Element> list = new ArrayList<Element>();
-    int score;
-    int countError;
-    int gerator;
+    int score, scoreDraw;
+    int countError, combo;
+    int gerator, limitInstance;
     boolean error;
     float volume;
     float width, height;
@@ -44,6 +44,8 @@ public class MainView extends View implements Runnable
         setKeepScreenOn(true);
         
         running = true;
+        
+        limitInstance = 50;
             
         touch = new InputTouch(height);
         
@@ -72,10 +74,12 @@ public class MainView extends View implements Runnable
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setTextSize(30);
-        c.drawText("SCORE: " + score, 10, getBottom() - 10, paint);
+        c.drawText("SCORE: " + scoreDraw, 10, getBottom() - 10, paint);
+        c.drawText("x" + combo, 10, 30, paint);
         
         paint.setColor(Color.rgb((int)((1 - volume) * 255), (int)(volume * 255), 0)); 
-        c.drawRect(0, 10, volume * width, 20, paint);
+        c.drawRect(10, 40, 20, 40 + volume * (height - 80), paint);
+        c.drawRect(width - 20, 40, width - 10, 40 + volume * (height - 80), paint);
         
         for(int i = 0; i < list.size(); i++)
         {
@@ -116,6 +120,9 @@ public class MainView extends View implements Runnable
     {
         touch.update();
         
+        if(scoreDraw < score)
+            scoreDraw++;
+        
         for(int i = 0; i < list.size(); i++)
         {
             list.get(i).Update();
@@ -131,12 +138,22 @@ public class MainView extends View implements Runnable
                 {
                 	if(volume < 1)
                 		volume += 0.1f;
-                	score +=10;
+                	score += 10 + combo;
+                        combo++;
+                        
+                        if((combo + 1) % 11 == 0)
+                        {
+                            if(limitInstance > 10)
+                                limitInstance--;
+                        }
+                        
                         touch.acerted();
                 }
                 else
                 {
                 	error = true;
+                        combo = 0;
+                        scoreDraw = score;
                 	volume -= 0.1f;
                 }
                 list.remove(i);
@@ -144,7 +161,7 @@ public class MainView extends View implements Runnable
             }
         }
         
-        if(gerator > 50)
+        if(gerator > limitInstance)
         {
             int selected = (int)(Math.random() * 3);
             switch(selected)
